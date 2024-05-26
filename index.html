@@ -88,12 +88,14 @@
             busesInParkList.innerHTML = '';
             buses.forEach(bus => {
                 const li = document.createElement('li');
-                li.textContent = `Bus Number: ${bus.busNumber} (Route: ${bus.routeNumber})`;
-                const button = document.createElement('button');
-                button.textContent = 'Start Route';
-                button.classList.add('start-route');
-                button.onclick = () => moveToRoute(bus.id);
-                li.appendChild(button);
+                li.innerHTML = `
+                    <div>
+                        <strong>Bus Number:</strong> ${bus.busNumber}<br>
+                        <strong>Route:</strong> ${bus.routeNumber}<br>
+                        <strong>Driver:</strong> ${bus.driverName}
+                    </div>
+                    <button class="start-route" onclick="moveToRoute(${bus.id})">Start Route</button>
+                `;
                 busesInParkList.appendChild(li);
             });
         }
@@ -103,12 +105,14 @@
             busesOnRouteList.innerHTML = '';
             buses.forEach(bus => {
                 const li = document.createElement('li');
-                li.textContent = `Bus Number: ${bus.busNumber} (Route: ${bus.routeNumber})`;
-                const button = document.createElement('button');
-                button.textContent = 'End Route';
-                button.classList.add('end-route');
-                button.onclick = () => moveToPark(bus.id);
-                li.appendChild(button);
+                li.innerHTML = `
+                    <div>
+                        <strong>Bus Number:</strong> ${bus.busNumber}<br>
+                        <strong>Route:</strong> ${bus.routeNumber}<br>
+                        <strong>Driver:</strong> ${bus.driverName}
+                    </div>
+                    <button class="end-route" onclick="moveToPark(${bus.id})">End Route</button>
+                `;
                 busesOnRouteList.appendChild(li);
             });
         }
