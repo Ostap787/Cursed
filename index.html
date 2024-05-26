@@ -55,6 +55,9 @@
             background-color: #dc3545;
             color: #fff;
         }
+        .bus-info {
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -76,50 +79,36 @@
         function fetchBuses() {
             fetch('https://bus--park.azurewebsites.net/api/buses/inPark')
                 .then(response => response.json())
-                .then(data => renderBusesInPark(data));
+                .then(data => {
+                    renderBuses(data, 'busesInParkList');
+                });
 
             fetch('https://bus--park.azurewebsites.net/api/buses/onRoute')
                 .then(response => response.json())
-                .then(data => renderBusesOnRoute(data));
+                .then(data => {
+                    renderBuses(data, 'busesOnRouteList');
+                });
         }
 
-        function renderBusesInPark(buses) {
-            const busesInParkList = document.getElementById('busesInParkList');
-            busesInParkList.innerHTML = '';
+        function renderBuses(buses, listId) {
+            const busesList = document.getElementById(listId);
+            busesList.innerHTML = '';
             buses.forEach(bus => {
                 const li = document.createElement('li');
-                li.innerHTML = `Bus Number: ${bus.busNumber} <br> Route: ${bus.routeNumber} <br> Driver: ${bus.driverName}`;
-                const button = document.createElement('button');
-                button.textContent = 'Start Route';
-                button.classList.add('start-route');
-                button.onclick = () => moveToRoute(bus.id);
-                li.appendChild(button);
-                busesInParkList.appendChild(li);
+                li.innerHTML = `
+                    <div class="bus-info">
+                        <strong>Bus Number:</strong> ${bus.busNumber}<br>
+                        <strong>Route:</strong> ${bus.routeNumber}<br>
+                        <strong>Driver:</strong> ${bus.driverName}
+                    </div>
+                    <button class="${bus.inPark ? 'start-route' : 'end-route'}" onclick="toggleRoute(${bus.id}, ${bus.inPark})">${bus.inPark ? 'Start Route' : 'End Route'}</button>
+                `;
+                busesList.appendChild(li);
             });
         }
 
-        function renderBusesOnRoute(buses) {
-            const busesOnRouteList = document.getElementById('busesOnRouteList');
-            busesOnRouteList.innerHTML = '';
-            buses.forEach(bus => {
-                const li = document.createElement('li');
-                li.innerHTML = `Bus Number: ${bus.busNumber} <br> Route: ${bus.routeNumber} <br> Driver: ${bus.driverName}`;
-                const button = document.createElement('button');
-                button.textContent = 'End Route';
-                button.classList.add('end-route');
-                button.onclick = () => moveToPark(bus.id);
-                li.appendChild(button);
-                busesOnRouteList.appendChild(li);
-            });
-        }
-
-        function moveToRoute(id) {
-            fetch(`https://bus--park.azurewebsites.net/api/buses/moveToRoute/${id}`, { method: 'POST' })
-                .then(() => fetchBuses());
-        }
-
-        function moveToPark(id) {
-            fetch(`https://bus--park.azurewebsites.net/api/buses/moveToPark/${id}`, { method: 'POST' })
+        function toggleRoute(id, inPark) {
+            fetch(`https://bus--park.azurewebsites.net/api/buses/${inPark ? 'moveToRoute' : 'moveToPark'}/${id}`, { method: 'POST' })
                 .then(() => fetchBuses());
         }
 
