@@ -74,11 +74,11 @@
 
     <script>
         function fetchBuses() {
-            fetch('/api/buses/inPark')
+            fetch('https://bus--park.azurewebsites.net/api/buses/inPark')
                 .then(response => response.json())
                 .then(data => renderBusesInPark(data));
 
-            fetch('/api/buses/onRoute')
+            fetch('https://bus--park.azurewebsites.net/api/buses/onRoute')
                 .then(response => response.json())
                 .then(data => renderBusesOnRoute(data));
         }
@@ -114,12 +114,12 @@
         }
 
         function moveToRoute(id) {
-            fetch(`/api/buses/moveToRoute/${id}`, { method: 'POST' })
+            fetch(`https://bus--park.azurewebsites.net/api/buses/moveToRoute/${id}`, { method: 'POST' })
                 .then(() => fetchBuses());
         }
 
         function moveToPark(id) {
-            fetch(`/api/buses/moveToPark/${id}`, { method: 'POST' })
+            fetch(`https://bus--park.azurewebsites.net/api/buses/moveToPark/${id}`, { method: 'POST' })
                 .then(() => fetchBuses());
         }
 
