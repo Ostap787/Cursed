@@ -73,6 +73,16 @@
             <h2>Buses on Route</h2>
             <ul id="busesOnRouteList"></ul>
         </div>
+
+        <div class="list-section">
+            <h2>Review Buses in Park</h2>
+            <ul id="newBusesInParkList"></ul>
+        </div>
+
+        <div class="list-section">
+            <h2>Review Buses on Route</h2>
+            <ul id="newBusesOnRouteList"></ul>
+        </div>
     </div>
 
     <script>
@@ -80,19 +90,21 @@
             fetch('https://bus--park.azurewebsites.net/api/buses/inPark')
                 .then(response => response.json())
                 .then(data => {
-                    renderBuses(data, 'busesInParkList');
+                    renderBusesInPark(data, 'busesInParkList');
+                    renderNewBuses(data, 'newBusesInParkList'); // For new section
                 });
 
             fetch('https://bus--park.azurewebsites.net/api/buses/onRoute')
                 .then(response => response.json())
                 .then(data => {
-                    renderBuses(data, 'busesOnRouteList');
+                    renderBusesOnRoute(data, 'busesOnRouteList');
+                    renderNewBuses(data, 'newBusesOnRouteList'); // For new section
                 });
         }
 
-        function renderBuses(buses, listId) {
-            const busesList = document.getElementById(listId);
-            busesList.innerHTML = '';
+        function renderBusesInPark(buses, elementId) {
+            const list = document.getElementById(elementId);
+            list.innerHTML = '';
             buses.forEach(bus => {
                 const li = document.createElement('li');
                 li.innerHTML = `
@@ -101,9 +113,42 @@
                         <strong>Route:</strong> ${bus.routeNumber}<br>
                         <strong>Driver:</strong> ${bus.driverName}
                     </div>
-                    <button class="${bus.inPark ? 'start-route' : 'end-route'}" onclick="toggleRoute(${bus.id}, ${bus.inPark})">${bus.inPark ? 'Start Route' : 'End Route'}</button>
+                    <button class="start-route" onclick="toggleRoute(${bus.id}, true)">Start Route</button>
                 `;
-                busesList.appendChild(li);
+                list.appendChild(li);
+            });
+        }
+
+        function renderBusesOnRoute(buses, elementId) {
+            const list = document.getElementById(elementId);
+            list.innerHTML = '';
+            buses.forEach(bus => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="bus-info">
+                        <strong>Bus Number:</strong> ${bus.busNumber}<br>
+                        <strong>Route:</strong> ${bus.routeNumber}<br>
+                        <strong>Driver:</strong> ${bus.driverName}
+                    </div>
+                    <button class="end-route" onclick="toggleRoute(${bus.id}, false)">End Route</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function renderNewBuses(buses, elementId) {
+            const list = document.getElementById(elementId);
+            list.innerHTML = '';
+            buses.forEach(bus => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="bus-info">
+                        <strong>Bus Number:</strong> ${bus.busNumber}<br>
+                        <strong>Route:</strong> ${bus.routeNumber}<br>
+                        <strong>Driver:</strong> ${bus.driverName}
+                    </div>
+                `;
+                list.appendChild(li);
             });
         }
 
