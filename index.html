@@ -89,7 +89,7 @@
             <input type="text" id="busNumber" placeholder="Bus Number">
             <input type="text" id="routeNumber" placeholder="Route Number">
             <input type="text" id="driverName" placeholder="Driver Name">
-            <button onclick="addBus()">Add Bus</button>
+            <button onclick="validateAndAddBus()">Add Bus</button>
         </div>
 
         <div class="list-section">
@@ -180,11 +180,33 @@
             });
         }
 
-        function addBus() {
-            const busNumber = document.getElementById('busNumber').value;
-            const routeNumber = document.getElementById('routeNumber').value;
-            const driverName = document.getElementById('driverName').value;
+        function validateAndAddBus() {
+            const busNumber = document.getElementById('busNumber').value.trim();
+            const routeNumber = document.getElementById('routeNumber').value.trim();
+            const driverName = document.getElementById('driverName').value.trim();
 
+            const busNumberPattern = /^[a-zA-Z]{2}\d{4}[a-zA-Z]{2}$/;
+            if (!busNumberPattern.test(busNumber)) {
+                alert('Please enter a valid bus number in the format AA0000AA.');
+                return;
+            }
+
+            const routeNumberPattern = /^[a-zA-Z]\d{2}$/;
+            if (!routeNumberPattern.test(routeNumber)) {
+                alert('Please enter a valid route number in the format A00.');
+                return;
+            }
+
+            const driverNamePattern = /^[a-zA-Zа-яА-Я]+\s[A-ZА-Я]\.[A-ZА-Я]\.$/;
+            if (!driverNamePattern.test(driverName)) {
+                alert('Please enter a valid driver name in the format "Surname I.I."');
+                return;
+            }
+
+            addBus(busNumber, routeNumber, driverName);
+        }
+
+        function addBus(busNumber, routeNumber, driverName) {
             const newBus = {
                 busNumber,
                 routeNumber,
