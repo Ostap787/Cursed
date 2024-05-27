@@ -58,11 +58,39 @@
         .bus-info {
             line-height: 1.5;
         }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        .form-section input {
+            padding: 10px;
+            margin: 5px 0;
+            width: calc(100% - 22px);
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .form-section button {
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #8000ff;
+            color: #fff;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Bus Park Management</h1>
+
+        <div class="form-section">
+            <h2>Add New Bus</h2>
+            <input type="text" id="busNumber" placeholder="Bus Number">
+            <input type="text" id="routeNumber" placeholder="Route Number">
+            <input type="text" id="driverName" placeholder="Driver Name">
+            <button onclick="addBus()">Add Bus</button>
+        </div>
 
         <div class="list-section">
             <h2>Buses in Park</h2>
@@ -149,6 +177,30 @@
                     </div>
                 `;
                 list.appendChild(li);
+            });
+        }
+
+        function addBus() {
+            const busNumber = document.getElementById('busNumber').value;
+            const routeNumber = document.getElementById('routeNumber').value;
+            const driverName = document.getElementById('driverName').value;
+
+            const newBus = {
+                busNumber,
+                routeNumber,
+                driverName
+            };
+
+            fetch('https://bus--park.azurewebsites.net/api/buses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newBus)
+            })
+            .then(response => response.json())
+            .then(() => {
+                fetchBuses();
             });
         }
 
